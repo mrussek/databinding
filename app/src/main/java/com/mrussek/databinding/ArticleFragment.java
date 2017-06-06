@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 public class ArticleFragment extends Fragment {
-    private static final String ARTICLE = "ARTICLE";
+    private static final String ARTICLE = "ARTICLE_TAG";
 
     private ArticleEntity article;
 

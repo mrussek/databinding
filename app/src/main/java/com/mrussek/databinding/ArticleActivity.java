@@ -1,17 +1,14 @@
 package com.mrussek.databinding;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
-import java.util.Arrays;
-import java.util.Date;
-
 public class ArticleActivity extends AppCompatActivity {
+    public static final String ARTICLE_TAG = "ARTICLE_TAG";
     private final String ARTICLE_FRAGMENT_TAG = "Article Fragment";
     private ArticleFragment articleFragment;
 
@@ -20,7 +17,7 @@ public class ArticleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_data_binding);
 
-        ArticleEntity article = getArticleEntity();
+        ArticleEntity article = getArticleEntity(getIntent());
 
         setUpArticleFragment(article);
     }
@@ -39,11 +36,7 @@ public class ArticleActivity extends AppCompatActivity {
     }
 
     @NonNull
-    private ArticleEntity getArticleEntity() {
-        return new ArticleEntity(
-                "Data Binding: The Good Parts",
-                new Date(),
-                Arrays.asList("Maxwell Russek", "Joe Smith"),
-                Rating.FIVE_STARS, 10_000, true, getString(R.string.lorem_ipsum));
+    private ArticleEntity getArticleEntity(Intent intent) {
+        return (ArticleEntity)intent.getSerializableExtra(ARTICLE_TAG);
     }
 }
