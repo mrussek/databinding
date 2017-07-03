@@ -1,47 +1,52 @@
 package com.mrussek.databinding;
 
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.Toast;
+
+import com.mrussek.databinding.databinding.ArticleLayoutBinding;
 
 public class ArticleActivity extends AppCompatActivity {
     public static final String ARTICLE_TAG = "ARTICLE_TAG";
 
+    private ArticleLayoutBinding binding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.article_layout);
+        binding = DataBindingUtil.setContentView(this, R.layout.article_layout);
 
         ArticleEntity article = getArticleEntity(getIntent());
 
-        bindArticle(article);
+        Handler handler = new Handler(Looper.myLooper());
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                article.setNumViews(article.getNumViews() + 1);
+
+                handler.postDelayed(this, 1000);
+            }
+        }, 1000);
+
+        binding.setArticle(article);
+        binding.setHandlers(new Handlers());
     }
-
-    private void bindArticle(ArticleEntity article) {
-        // If only there was an easier way...
-        TextView articleTitle = (TextView) findViewById(R.id.article_title);
-        TextView mainAuthor = (TextView) findViewById(R.id.main_author);
-        TextView publishedDate = (TextView) findViewById(R.id.published_date);
-        View endorsedMarker = findViewById(R.id.endorsed_marker);
-        TextView numViews = (TextView) findViewById(R.id.num_views);
-        TextView articleContent = (TextView) findViewById(R.id.article_content);
-        TextView rating = (TextView) findViewById(R.id.rating);
-
-        articleTitle.setText(article.getTitle());
-        mainAuthor.setText(article.getAuthors().get(0));
-        publishedDate.setText(article.getPublishedDate().toString());
-        endorsedMarker.setVisibility(article.isEndorsed() ? View.VISIBLE : View.GONE);
-        numViews.setText(getString(R.string.num_of_views, article.getNumViews()));
-        articleContent.setText(article.getContent());
-        rating.setText(article.getRating().toString());
-    }
-
 
     @NonNull
     private ArticleEntity getArticleEntity(Intent intent) {
         return (ArticleEntity)intent.getSerializableExtra(ARTICLE_TAG);
+    }
+
+    public class Handlers {
+        public void clicked(View v) {
+            Toast.makeText(ArticleActivity.this, "TOAST", Toast.LENGTH_LONG).show();
+        }
     }
 }

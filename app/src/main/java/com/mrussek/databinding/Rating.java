@@ -1,6 +1,6 @@
 package com.mrussek.databinding;
 
-enum Rating {
+public enum Rating {
     ONE_STAR {
         @Override
         public String toString() {
